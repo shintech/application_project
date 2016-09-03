@@ -8,7 +8,8 @@ Requires Ruby Gems listed below:
   "fileutils"
 
 Downloads files linked to in <a> tags on url specified in Scraper.target to .bin/download_directory.
-Imports contents of zip files in download directory to Redis list entitled 'NEWS_XML'.
+Extracts zip files from .bin/download_directory to .bin/data_directory
+Imports contents of xml files in .bin/data_directory to Redis list entitled 'NEWS_XML'.
 
 Target url and Redis list can be changed as per instructions below.
 
@@ -18,8 +19,9 @@ Open terminal in directory and type "ruby run.rb"
 
 ################################################
 
-app.target("http://example.org/whatever")    # url format => "http://example.org/whatever/"
+app.target("http://example")    # url format => "http://example.org/whatever/"
 app.redis_list("NEWS_XML")    # name of Redis list.
-app.config_directory    # creates download directory with a unique name.
+app.create_folders    # creates data and download directories in bin folder.
 app.download_files    # downloads the files to bin/folder.download.
-app.xml_to_redis     # extracts contents of zip folders to redis_list
+app.extract_zip_files     # extracts zip files to bin/folder.data.
+app.to_redis    # uploads contents of files in bin/folder.data to Redis list.
