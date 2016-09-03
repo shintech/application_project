@@ -45,6 +45,8 @@ class Scraper
           retries -= 1
           retry
         end
+      ensure
+        download.close unless download.nil?
       end
     end
   end
