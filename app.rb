@@ -40,11 +40,11 @@ class Scraper
           if retries > 0
             puts "Timeout, retrying..."
             retries -= 1
-            `echo "Timeout error" >> log.txt`
+            `echo "Timeout error at $(date)" >> log.txt`
             retry
           else
             puts "Connection error, aborting..."
-            `echo "Connection aborted" >> log.txt`
+            `echo "Connection aborted at ($date)" >> log.txt`
             exit
           end
         end
