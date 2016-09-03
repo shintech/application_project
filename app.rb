@@ -17,10 +17,11 @@ class Scraper
   def config_directory
     folder = "#{DateTime.now.strftime('%Y-%m-%d')}-" + "#{@target}".split('/').last
     @download = "bin/#{folder}_download"
-    FileUtils.mkdir_p @download
+    @data = "bin/#{folder}_data"
   end
   
   def download_files
+    FileUtils.mkdir_p @download
     retries = 3
     urls = []
     page = Nokogiri::HTML(open(@target))
@@ -52,7 +53,7 @@ class Scraper
     end
   end
   
-  def xml_to_redis
+  def extract_zip_files
     FileUtils.mkdir_p @data
     dir = Dir["#{@download}/*.zip"]
     puts "\nPlease wait..."
@@ -60,10 +61,22 @@ class Scraper
     dir.each do |d|
       Zip::File.open(d) do |zip_file|
         zip_file.each do |f|
-          xmldoc = f.get_input_stream.read
-          @r.sadd "#{@redis_list}", "#{xmldoc}"
+          if !File.file?("#{@data}/#{f}")
+            f.extract("#{@data}/#{f}") { true }
+          end
         end
+        puts "Processing #{zip_file}..."
       end
+    end
+  end
+  
+  def to_redis
+    dir = Dir["#{@data}/*.xml"]
+    puts "\nPlease wait..."
+    puts "Uploading contents of data directory to '#{@redis_list}'..."
+    dir.each do |f|
+      xmldoc = Nokogiri::XML(File.open(f))
+      @r.sadd "#{@redis_list}", "#{xmldoc}"
     end
   end
   
