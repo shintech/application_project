@@ -4,7 +4,7 @@ require 'open-uri'
 require 'redis'
 
 class Scraper
-  
+
   attr_accessor :target, :redis_list
 
   def initialize
@@ -12,7 +12,7 @@ class Scraper
     @target = target
     @redis_list = redis_list
   end
-  
+
   def xml_to_redis
     urls = []
     retries = 3
@@ -27,16 +27,19 @@ class Scraper
           download = open("#{@target}#{url}")
           Zip::File.open(download) do |zip_file|
             zip_file.each do |f|
+              raise "error"
               xmldoc = f.get_input_stream.read
               @r.sadd "#{@redis_list}", "#{xmldoc}"
             end
             puts "Finished processing #{url}..."
+            download.close
           end
         end
-      rescue StandardError => e
+      rescue => error
         if retries == 0
           puts "Error skipped after three failed attempts..."
-          File.write("./log.txt", "Skipped #{@target}#{url} at #{DateTime.now}")
+          report_error("#{error.class} and #{error.message} at #{DateTime.now}\n##Skipped #{@target}#{url} at #{DateTime.now}")
+          log_errors
           retries = 3
           next
         else
@@ -44,10 +47,20 @@ class Scraper
           retries -= 1
           retry
         end
-      ensure
-        download.close unless download.nil?
       end
     end
   end
-  
+
+  def report_error(error_message)
+    (Thread.current[:errors] ||= []) << "#{error_message}"
+  end
+
+  def log_errors
+      File.open('log.txt', 'a') do |file|
+      (Thread.current[:errors] ||= []).each do |error|
+        file.puts error
+      end
+    end
+  end
+
 end
