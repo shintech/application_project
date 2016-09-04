@@ -15,7 +15,7 @@ class Scraper
 
   def xml_to_redis
     urls = []
-    retries = 3
+    retries = 2
     page = Nokogiri::HTML(open(@target))
     page.xpath('//a/@href').each do |links|
       urls << links.content
@@ -39,7 +39,7 @@ class Scraper
           puts "Error, skipped after three failed attempts..."
           report_error("##Skipped #{@target}#{url} at #{DateTime.now}\n#{error.class}: #{error.message}")
           log_errors
-          retries = 3
+          retries = 2
           next
         else
           puts "Error, retrying..."
