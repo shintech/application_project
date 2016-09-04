@@ -27,7 +27,6 @@ class Scraper
           download = open("#{@target}#{url}")
           Zip::File.open(download) do |zip_file|
             zip_file.each do |f|
-              raise "error"
               xmldoc = f.get_input_stream.read
               @r.sadd "#{@redis_list}", "#{xmldoc}"
             end
