@@ -6,7 +6,7 @@ Requires Ruby Gems listed below:
   "open-uri"
   "redis"
 
-Downloads files linked to in <a> tags on url specified in Scraper.target and imports contents of zip files to Redis list specified in Scraper.redis_list.
+Downloads files linked to in <a> tags on url specified in app.target and imports contents of zip files to Redis list specified in app.redis_list.
 
 Target url and Redis list can be changed as per instructions below.
 
