@@ -5,7 +5,6 @@ Requires Ruby Gems listed below:
   "nokogiri"
   "open-uri"
   "redis"
-  "fileutils"
 
 Downloads files linked to in <a> tags on url specified in Scraper.target and imports contents of zip files to Redis list specified in Scraper.redis_list.
 

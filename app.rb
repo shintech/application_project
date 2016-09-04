@@ -2,7 +2,6 @@ require "zip"
 require 'nokogiri'
 require 'open-uri'
 require 'redis'
-require 'fileutils'
 
 class Scraper
   
