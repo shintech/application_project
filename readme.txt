@@ -19,5 +19,4 @@ Open terminal in directory and type "ruby run.rb"
 
 app.target("http://example.org/whatever")    # url format => "http://example.org/whatever/"
 app.redis_list("NEWS_XML")    # name of Redis list.
-app.config_directory    # creates download directory with a unique name.
 app.xml_to_redis     # downloads and extracts contents of zip folders to redis_list
